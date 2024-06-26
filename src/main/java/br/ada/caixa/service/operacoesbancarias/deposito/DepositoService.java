@@ -1,7 +1,7 @@
 package br.ada.caixa.service.operacoesbancarias.deposito;
 
 import br.ada.caixa.exceptions.ValidacaoException;
-import br.ada.caixa.respository.ContaRepository;
+import br.ada.caixa.repository.ContaRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

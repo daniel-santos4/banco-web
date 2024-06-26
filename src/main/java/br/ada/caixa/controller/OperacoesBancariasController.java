@@ -46,7 +46,7 @@ public class OperacoesBancariasController {
     }
 
     @PostMapping("/transferir")
-    public void transferencia(@RequestBody TransferenciaRequestDto transferenciaRequestDto) {
+    public void transferir(@RequestBody TransferenciaRequestDto transferenciaRequestDto) {
         transferenciaService.transferir(transferenciaRequestDto.getNumeroContaOrigem(),
                 transferenciaRequestDto.getNumeroContaDestino(),
                 transferenciaRequestDto.getValor());
@@ -60,7 +60,7 @@ public class OperacoesBancariasController {
         return ResponseEntity.status(HttpStatus.OK).body(saldoResponseDto);
     }
 
-    @PostMapping("/investimento")
+    @PostMapping("/investir")
     public ResponseEntity<SaldoResponseDto> investir
             (@RequestBody InvestimentoRequestDto investimentoRequestDto) {
         var contaInvestimento = investimentoService.investir(investimentoRequestDto.getDocumentoCliente(), investimentoRequestDto.getValor());

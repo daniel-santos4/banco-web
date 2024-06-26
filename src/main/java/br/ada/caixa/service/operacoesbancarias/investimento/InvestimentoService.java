@@ -5,13 +5,15 @@ import br.ada.caixa.entity.Conta;
 import br.ada.caixa.entity.TipoCliente;
 import br.ada.caixa.entity.TipoConta;
 import br.ada.caixa.exceptions.ValidacaoException;
-import br.ada.caixa.respository.ClienteRepository;
-import br.ada.caixa.respository.ContaRepository;
+import br.ada.caixa.repository.ClienteRepository;
+import br.ada.caixa.repository.ContaRepository;
+import br.ada.caixa.service.conta.ContaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +35,13 @@ public class InvestimentoService {
         return contaRepository.save(contaInvestimento);
     }
 
+    // TODO: Mover pra outra classe pra respeitar o princípio da responsabilidade única
+    public void render() {
+        for (Conta conta : contaRepository.findContasByTipo(TipoConta.CONTA_INVESTIMENTO)) {
+            getOperacaoTipoCliente(conta.getCliente()).render(conta);
+        }
+    }
+
     private Conta getSingleContaInvestimento(final Cliente cliente) {
         var contas =
                 contaRepository
@@ -47,6 +56,7 @@ public class InvestimentoService {
             contaInvestimento.setTipo(TipoConta.CONTA_INVESTIMENTO);
             contaInvestimento.setCliente(cliente);
             contaInvestimento.setSaldo(BigDecimal.ZERO);
+            contaInvestimento.setNumero(ContaService.gerarNumero(contaRepository));
         } else {
             contaInvestimento = contas.get(0);
         }

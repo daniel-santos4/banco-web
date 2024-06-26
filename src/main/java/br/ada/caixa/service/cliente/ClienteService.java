@@ -10,13 +10,16 @@ import br.ada.caixa.entity.Conta;
 import br.ada.caixa.entity.TipoCliente;
 import br.ada.caixa.entity.TipoConta;
 import br.ada.caixa.enums.StatusCliente;
-import br.ada.caixa.respository.ClienteRepository;
+import br.ada.caixa.repository.ClienteRepository;
+import br.ada.caixa.repository.ContaRepository;
+import br.ada.caixa.service.conta.ContaService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,6 +27,7 @@ import java.util.stream.Collectors;
 public class ClienteService {
 
     private final ClienteRepository clienteRepository;
+    private final ContaRepository contaRepository;
     private final ModelMapper modelMapper;
 
     public RegistrarClienteResponseDto registrarPF(RegistrarClientePFRequestDto clienteDto) {
@@ -43,7 +47,8 @@ public class ClienteService {
     public RegistrarClienteResponseDto registrar(Cliente cliente) {
         cliente = clienteRepository.save(cliente);
         final var conta = criarConta(cliente);
-
+        conta.setNumero(ContaService.gerarNumero(contaRepository));
+        contaRepository.save(conta);
         final SaldoResponseDto saldoResponseDto = SaldoResponseDto.builder()
                 .saldo(conta.getSaldo())
                 .numeroConta(conta.getNumero())
